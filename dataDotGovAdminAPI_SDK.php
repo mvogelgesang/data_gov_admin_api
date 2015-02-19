@@ -26,7 +26,6 @@ class ApiDataGovClient extends Client {
    */
   public function __construct($xApiKey, $xAdminAuthToken) {
   	parent::__construct(['base_url' => $this->apiUrl]);
-    // Set all requests to include the 'affiliate' parameter.
     $this->xApiKey = $xApiKey;
     $this->xAdminAuthToken = $xAdminAuthToken;
     $this->setDefaultOption('headers', array(
@@ -37,19 +36,6 @@ class ApiDataGovClient extends Client {
 
   /**
    * Sends a search request.
-   *
-   * @param string $query
-   *   The string of keywords.
-   *
-   * @param string $dc
-   *   (optional) The document collection. Defaults to none.
-   *
-   * @param int $page
-   *   (optional). The search result page offset, used for pagination.
-   *   Defaults to 1.
-   *
-   * @param string $index
-   *   (optional) The USASearch index to search. Default to 'web'.
    *
    * @return array
    *   The response, including results.
@@ -194,10 +180,3 @@ class ApiDataGovClient extends Client {
   }
 
 }
-
-
-$client = new ApiDataGovClient('SoLTUG3FLZnZd9Za1OmohfrbmlFsxfMAXCQSj7d6','3tPmCZP2ptJVmEK1j8FIuWEYYJMSGdSbztUmCLjf');
-$response = $client->getUsers();
-print "<pre>"; print_r($response); print "</pre>";
-    
-
