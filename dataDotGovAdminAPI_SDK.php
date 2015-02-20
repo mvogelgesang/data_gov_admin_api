@@ -1,18 +1,11 @@
 <?php 
-error_reporting(-1);
-$conf['error_level'] = 2;
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
-ini_set('memory_limit', '-1');
-
-require 'vendor/autoload.php';
-
 
 /**
  * @file
  * Contains the client class for communicating with the api.data.gov api umbrella.
  */
 
+require 'vendor/autoload.php';
 use GuzzleHttp\Client;
 
 class ApiDataGovClient extends Client {
@@ -103,7 +96,7 @@ class ApiDataGovClient extends Client {
 	 *
 	 * @return array
 	 *   The response, including results
-	*/
+	 */
   public function createUser($email, $fname, $lname, $use_description, $t_and_c = true, $send_welcome_email = false, $throttle_by_ip = false, $roles = array(), $enabled = true) {
   	$body = array( 
   		"user" => array(
@@ -120,7 +113,7 @@ class ApiDataGovClient extends Client {
 		      "rate_limit_mode" => null,
 		      "rate_limits" => array(),
 		    ),
-		  )); 
+	  )); 
   	
 	  $request = $this->createRequest('POST','users');
   	$request->setBody(json_encode($body));
@@ -163,7 +156,7 @@ class ApiDataGovClient extends Client {
 	 *
 	 * @return array
 	 *   The response, including results
-	*/
+	 */
   public function updateUser($id, $enabled) {
   	$body = array( 
   		"user" => array(
@@ -178,5 +171,4 @@ class ApiDataGovClient extends Client {
 
     return $data;
   }
-
 }
