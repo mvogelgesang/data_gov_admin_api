@@ -154,4 +154,47 @@ class ApiDataGovClient extends Client {
 
     return $data;
   }
+
+  /**
+   * Retrieves a list of API's or a specific API
+   *
+   * @return array
+   *  The response, including results
+   */
+  public function getApis($apiId=null) {
+    $id = null;
+    if (!empty($apiId)) {
+      $id = '/' . $apiId;
+    }
+    $request = $this->createRequest('GET', 'apis' . $id);
+    $request->setBody(Stream::factory(json_encode($body)));
+    $response = $this->send($request);
+    $data = $response->json();
+
+    return $data;
+  }
+
+  /**
+   * Updates a given API
+   *
+   * @param string $id
+   *   Unique ID of the api to update
+   *
+   * @param array $updateArray
+   *   Key value pairs matching API object fields
+   *
+   * @return array
+   *   The response, including results
+   */
+  public function updateApi($apiId, $updateArray) {
+    $body = array( 
+      "api" => $updateArray
+    ); 
+    $request = $this->createRequest('PUT', 'apis/' . $apiId);
+    $request->setBody(Stream::factory(json_encode($body)));
+    $response = $this->send($request);
+    $data = $response->json();
+
+    return $data;
+  }
 }
