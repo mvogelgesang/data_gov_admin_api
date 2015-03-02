@@ -7,6 +7,7 @@
 
 require 'vendor/autoload.php';
 use GuzzleHttp\Client;
+use GuzzleHttp\Stream\Stream;
 
 class ApiDataGovClient extends Client {
 
@@ -16,6 +17,12 @@ class ApiDataGovClient extends Client {
 
   /**
    * Constructor.
+   * 
+   * @param string $xApiKey
+   *   An api.data.gov api key that is granted to your user.
+   *
+   * @param string $xAdminAuthToken
+   *   Admin Authorization Token provided by api.data.gov admin accounts.
    */
   public function __construct($xApiKey, $xAdminAuthToken) {
   	parent::__construct(['base_url' => $this->apiUrl]);
@@ -23,19 +30,19 @@ class ApiDataGovClient extends Client {
     $this->xAdminAuthToken = $xAdminAuthToken;
     $this->setDefaultOption('headers', array(
     	'X-Api-Key' => $this->xApiKey,
-			'X-Admin-Auth-Token' => $this->xAdminAuthToken
+			'X-Admin-Auth-Token' => $this->xAdminAuthToken,
+      'Content-Type' => 'application/json',
+      'Accept' => 'text/*'
 		));
   }
 
   /**
-   * Sends a search request.
+   * Requests a list of all users
    *
    * @return array
    *   The response, including results.
    */
   public function getUsers() {
-
-    // @todo Add ability to include 'sort_by' parameter.
     $request = $this->createRequest('GET','users');
 
     $response = $this->send($request);
@@ -48,7 +55,7 @@ class ApiDataGovClient extends Client {
    * Requests a given user.
    *
    * @param string $id
-   *   The string of keywords.
+   *   The user id as provided by api.data.gov
    *
    * @return array
    *   The response, including results.
@@ -116,7 +123,7 @@ class ApiDataGovClient extends Client {
 	  )); 
   	
 	  $request = $this->createRequest('POST','users');
-  	$request->setBody(json_encode($body));
+  	$request->setBody(Stream::factory(json_encode($body)));
 
   	$response = $this->send($request);
     $data = $response->json();
@@ -125,47 +132,23 @@ class ApiDataGovClient extends Client {
   }
 
   /**
-	 * Creates an API User
+	 * Updates an API User
 	 *
-	 * @param string $email
-	 *   The users e-mail address
+	 * @param string $id
+	 *   The users unique ID
 	 *
-	 * @param string $fname
-	 *   The users first name
-	 *
-	 * @param string $lname
-	 *   The users last name
-	 *
-	 * @param string $use_description
-	 *   Description of how the user will utilize the API
-	 *
-	 * @param boolean $t_and_c
-	 *   Does the user agree to the terms and conditions?
-	 *
-	 * @param boolean $send_welcome_email
-	 *   Have api.data.gov send a welcome e-mail to the user
-	 *
-	 * @param boolean $throttle_by_ip
-	 *   Throttle requests by IP address
-	 *
-	 * @param array $roles
-	 *   Roles that the user should be granted
-	 *
-	 * @param boolean $enabled
-	 *   Enable the account?
+	 * @param array $updateArray
+	 *   Key value pairs matching user object fields
 	 *
 	 * @return array
 	 *   The response, including results
 	 */
-  public function updateUser($id, $enabled) {
+  public function updateUser($id, $updateArray) {
   	$body = array( 
-  		"user" => array(
-		    "enabled" => $enabled,
-		)); 
-  	
+  		"user" => $updateArray
+    ); 
 	  $request = $this->createRequest('PUT','users/' . $id);
-  	$request->setBody(json_encode($body));
-
+  	$request->setBody(Stream::factory(json_encode($body)));
   	$response = $this->send($request);
     $data = $response->json();
 
