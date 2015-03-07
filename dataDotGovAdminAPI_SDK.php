@@ -3,6 +3,7 @@
 /**
  * @file
  * Contains the client class for communicating with the api.data.gov api umbrella.
+ * version 0.1
  */
 
 require 'vendor/autoload.php';
